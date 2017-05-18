@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Highcharts::Export::Image::VERSION
   spec.authors       = ["Oxyless"]
   spec.email         = ["clement.bruchon@gmail.com"]
-  spec.summary       = %q{Export js highchart into image.}
-  spec.description   = %q{Export js highchart into image (with phantomjs).}
+  spec.summary       = %q{Export js highchart / html into image.}
+  spec.description   = %q{Export js highchart / html into image (with phantomjs).}
   spec.homepage      = ""
   spec.license       = "MIT"
 
