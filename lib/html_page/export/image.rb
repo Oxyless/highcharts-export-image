@@ -29,7 +29,7 @@ module HtmlPage
         options = config.default_options.merge(options)
         options_line = options.inject([]) { |options_array, (option, value)| options_array << (value ? "-#{option}=#{value}" : "--#{option}" ); options_array }.join(' ')
 
-        cmd = "#{config.phantomjs} #{config.html_page_convert} \"#{html_page_content}\" #{output_path} #{options_line}"
+        cmd = "#{config.phantomjs} #{config.html_page_convert} #{html_page_content.shellescape} #{output_path.shellescape} #{options_line}"
         cmd = "timeout 42 " + cmd if self.command?("timeout")
         result = `#{cmd}`
 
