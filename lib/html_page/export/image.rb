@@ -1,5 +1,7 @@
 require "html_page/export/image/version"
 require "html_page/export/image/configuration"
+require 'shellwords'
+require 'json'
 
 module HtmlPage
   module Export
@@ -27,7 +29,15 @@ module HtmlPage
       def self.html_to_img(html_page_content, output_path, options = {})
         config ||= HtmlPage::Export::Image.config
         options = config.default_options.merge(options)
-        options_line = options.inject([]) { |options_array, (option, value)| options_array << (value ? "-#{option}=#{value}" : "--#{option}" ); options_array }.join(' ')
+        options_line = options.inject([]) { |options_array, (option, value)|
+          if option == :paper_size
+            options_array << "-paper_size=#{value.to_json}".shellescape
+          else
+            options_array << (value ? "-#{option}=#{value.to_s}".shellescape : "--#{option}".shellescape );
+          end
+
+          options_array
+        }.join(' ')
 
         cmd = "#{config.phantomjs} #{config.html_page_convert} #{html_page_content.shellescape} #{output_path.shellescape} #{options_line}"
         cmd = "timeout 42 " + cmd if self.command?("timeout")
