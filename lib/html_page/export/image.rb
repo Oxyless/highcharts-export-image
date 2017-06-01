@@ -1,6 +1,7 @@
 require "html_page/export/image/version"
 require "html_page/export/image/configuration"
 require 'shellwords'
+require 'open3'
 require 'json'
 
 module HtmlPage
@@ -41,9 +42,9 @@ module HtmlPage
 
         cmd = "#{config.phantomjs} #{config.html_page_convert} #{html_page_content.shellescape} #{output_path.shellescape} #{options_line}"
         cmd = "timeout 42 " + cmd if self.command?("timeout")
-        result = `#{cmd}`
 
-        self.handle_errors(result, output_path)
+        stdin, stdout, stderr, wait_thr = Open3.popen3(cmd)
+        self.handle_errors(stdout.read, output_path)
 
         return output_path
       end
