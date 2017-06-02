@@ -40,10 +40,17 @@ module HtmlPage
           options_array
         }.join(' ')
 
-        cmd = "#{config.phantomjs} #{config.html_page_convert} #{html_page_content.shellescape} #{output_path.shellescape} #{options_line}"
-        cmd = "timeout 42 " + cmd if self.command?("timeout")
+        stdin, stdout, stderr, wait_thr = ""
 
-        stdin, stdout, stderr, wait_thr = Open3.popen3(cmd)
+        Tempfile.open('html_page_image_input', config.temp_dir) do |file|
+          file.write(html_page_content)
+
+          cmd = "#{config.phantomjs} #{config.html_page_convert} #{file.path} #{output_path.shellescape} #{options_line}"
+          cmd = "timeout 42 " + cmd if self.command?("timeout")
+
+          stdin, stdout, stderr, wait_thr = Open3.popen3(cmd)
+        end
+
         self.handle_errors(stdout.read, output_path)
 
         return output_path

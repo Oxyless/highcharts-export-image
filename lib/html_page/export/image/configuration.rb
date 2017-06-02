@@ -28,6 +28,10 @@ module HtmlPage
           @phantomjs || "/usr/local/bin/phantomjs"
         end
 
+        def temp_dir
+          @phantomjs || "/tmp"
+        end
+
         def default_options
           @default_options || {}
         end
