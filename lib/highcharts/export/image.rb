@@ -34,8 +34,11 @@ module Highcharts
         options = config.default_options.merge(options)
         options_line = options.inject([]) { |options_array, (option, value)| options_array << (value ? "-#{option} #{value}" : "--#{option}" ); options_array }.join(' ')
 
-        Timeout.timeout(20) do
-          cmd = "#{config.phantomjs} #{config.highchart_convert} -infile '#{chart_file.path}' -outfile '#{outfile_path}' #{options_line}"
+        Timeout.timeout(30) do
+          timeout_bin = `which timeout`.strip
+          timeout_cmd = (timeout_bin.present? ? "#{timeout_bin} 20 " : "")
+
+          cmd = "#{timeout_cmd}#{config.phantomjs} #{config.highchart_convert} -infile '#{chart_file.path}' -outfile '#{outfile_path}' #{options_line}"
           result = `#{cmd}`
 
           self.handle_errors(result)
