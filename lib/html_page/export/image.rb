@@ -43,7 +43,11 @@ module HtmlPage
         stdin, stdout, stderr, wait_thr = ""
 
         Tempfile.open('html_page_image_input', config.temp_dir) do |file|
-          file.write(html_page_content)
+          file.write(
+            html_page_content.gsub(/src="([^"]+)"/) do
+              "src=\"#{URI.escape(Regexp.last_match[1])}\""
+            end
+          )
 
           cmd = "#{config.phantomjs} #{config.html_page_convert} #{file.path} #{output_path.shellescape} #{options_line}"
           cmd = "timeout 42 " + cmd if self.command?("timeout")
