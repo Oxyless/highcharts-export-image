@@ -40,12 +40,13 @@ module HtmlPage
           options_array
         }.join(' ')
 
-        stdin, stdout, stderr, wait_thr = ""
+        stdout = nil
 
         Tempfile.open('html_page_image_input', config.temp_dir) do |file|
           file.write(
-            html_page_content.gsub(/src="([^"]+)"/) do
-              "src=\"#{URI.escape(Regexp.last_match[1])}\""
+            html_page_content.gsub(/src="([^"]+)"/) do |match|
+              next match if Regexp.last_match.nil?
+              "src=\"#{URI.escape(Regexp.last_match(1))}\""
             end
           )
 
