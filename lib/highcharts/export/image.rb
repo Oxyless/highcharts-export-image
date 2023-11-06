@@ -44,9 +44,16 @@ module Highcharts
           cmd = "#{timeout_cmd}#{config.phantomjs} #{config.highchart_convert} -infile '#{chart_file.path}' -outfile '#{outfile_path}' #{options_line}"
           puts cmd if config.debug
           result = `#{cmd}`
-          puts result if config.debug
 
-          self.handle_errors(result)
+          stdin, stdout, stderr, wait_thr = Open3.popen3(cmd)
+          out = stdout.read
+
+          if config.debug
+            puts out
+            puts stderr.read
+          end
+
+          self.handle_errors(out)
         end
 
         return outfile_path
