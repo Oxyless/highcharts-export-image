@@ -39,7 +39,9 @@ module Highcharts
           timeout_cmd = (timeout_bin.present? ? "#{timeout_bin} 20 " : "")
 
           cmd = "#{timeout_cmd}#{config.phantomjs} #{config.highchart_convert} -infile '#{chart_file.path}' -outfile '#{outfile_path}' #{options_line}"
+          puts cmd if config.debug
           result = `#{cmd}`
+          puts result if config.debug
 
           self.handle_errors(result)
         end

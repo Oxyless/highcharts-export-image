@@ -18,7 +18,7 @@ module Highcharts
       end
 
       class Configuration
-        attr_accessor :phantomjs, :default_options
+        attr_accessor :phantomjs, :default_options, :debug
 
         def highchart_convert
           @highchart_convert || File.join(Gem::Specification.find_by_name("highcharts-export-image").gem_dir, '/lib/highcharts.com/exporting-server/phantomjs/highcharts-convert.js')
@@ -30,6 +30,10 @@ module Highcharts
 
         def default_options
           @default_options || {}
+        end
+
+        def debug
+          @debug || false
         end
       end
     end
