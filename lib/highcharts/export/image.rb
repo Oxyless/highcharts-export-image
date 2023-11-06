@@ -19,6 +19,9 @@ module Highcharts
       # Convert chart_string (contain js chart) into image
       #
       def self.chart_to_img(chart_js, outfile_path, options: {})
+        config ||= Highcharts::Export::Image.config
+        puts chart_js if config.debug
+
         Tempfile.open(['chart', '.js']) do |f|
           f.write(chart_js)
           f.flush
