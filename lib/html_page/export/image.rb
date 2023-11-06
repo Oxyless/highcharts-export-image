@@ -43,20 +43,25 @@ module HtmlPage
         stdout = nil
 
         Tempfile.open('html_page_image_input', config.temp_dir) do |file|
-          file.write(
-            html_page_content.gsub(/src="([^"]+)"/) do |match|
-              next match if Regexp.last_match.nil?
-              "src=\"#{URI.escape(Regexp.last_match(1))}\""
-            end
-          )
+          content = html_page_content.gsub(/src="([^"]+)"/) do |match|
+            next match if Regexp.last_match.nil?
+            "src=\"#{URI.escape(Regexp.last_match(1))}\""
+          end
+
+          file.write(content)
+          puts content if config.debug
 
           cmd = "#{config.phantomjs} #{config.html_page_convert} #{file.path} #{output_path.shellescape} #{options_line}"
           cmd = "timeout 42 " + cmd if self.command?("timeout")
+          puts cmd if config.debug
 
           stdin, stdout, stderr, wait_thr = Open3.popen3(cmd)
         end
 
-        self.handle_errors(stdout.read, output_path)
+        output = stdout.read
+        puts output if config.debug
+
+        self.handle_errors(output, output_path)
 
         return output_path
       end

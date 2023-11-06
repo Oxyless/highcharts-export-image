@@ -18,7 +18,7 @@ module HtmlPage
       end
 
       class Configuration
-        attr_accessor :phantomjs, :default_options, :temp_dir
+        attr_accessor :phantomjs, :default_options, :temp_dir, :debug
 
         def html_page_convert
           @highchart_convert || File.join(Gem::Specification.find_by_name("highcharts-export-image").gem_dir, '/lib/html_page/export/javascript/html-page-convert.js')
@@ -30,6 +30,10 @@ module HtmlPage
 
         def temp_dir
           @temp_dir || "/tmp"
+        end
+
+        def debug
+          @debug || false
         end
 
         def default_options
